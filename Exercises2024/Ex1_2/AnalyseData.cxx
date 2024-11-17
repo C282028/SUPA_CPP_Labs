@@ -6,10 +6,12 @@
 #include <cstdlib>
 #include <vector>
 #include <utility>
+#include <cmath>
 
 using namespace std;
 
 
+// Function for reading coordinates from a .txt file
 vector <pair<float,float>> readCoords(string& filename)
 {
     // creates a vecotr from a pair of floats
@@ -47,6 +49,15 @@ else
     return coords;
 } //readCoords
 
+
+// Function to evaluate the magnitude of each vector
+float Magnitude(const pair<float, float>& coord)
+{
+	return sqrt(coord.first * coord.first + coord.second * coord.second);
+} //Magnitude
+
+
+// Function for printing coordinates read from the .txt file
 void printCoords(vector<pair<float, float>>& coords, int n)
 {
     // Print variables
@@ -55,32 +66,37 @@ void printCoords(vector<pair<float, float>>& coords, int n)
 
     if (n > coords.size())
     {
-        cout << "***Warning*** " << n << " larger than total number of coordinates" << endl;
+        cout << "***Warning*** " << n << " larger than total number of vectors " << "***Warning***" << endl;
         cout << "Printing first 5 coordinates instead" << endl;
         lines_to_print = min(5, static_cast<int>(coords.size()));
     }
 
-// Print up to the specified number of lines
+    // Print up to the specified number of lines
 	for (int i = 0; i < lines_to_print; ++i) 
     {
-		cout << "(" << coords[i].first << ", " << coords[i].second << ")" << endl;
+		float magnitude = Magnitude(coords[i]); 
+        cout << "(" << coords[i].first << ", " << coords[i].second << "), Magnitude: " << magnitude << endl;
 	}
+
 	cout << lines_to_print << " lines printed from file" << endl;
     cout << coords.size() << " lines read from file" << endl;
-
 } //printCoords
+
 
 int main()
 {
-    // Specify file to read from
+    // Specifys the file to be read
     string filepath = "/workspaces/SUPA_CPP_Labs/Exercises2024/Ex1_2/input2D_float.txt";
     // Calls the reading function
     vector<pair<float, float>> coords = readCoords(filepath);
-    // Specify the number of lines to print
-	int n = 26;
+    
+	// User input for number of coordinates to print
+	int n;
+	cout << "Please enter the number of coordinates you would like to print: ";
+	cin >> n;
+
     // Calls the printing function
     printCoords(coords, n);
 
     return 0;
-    
 } // main
