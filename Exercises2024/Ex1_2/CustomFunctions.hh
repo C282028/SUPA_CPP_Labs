@@ -19,3 +19,6 @@ float Magnitude(const pair<float, float>& coord);
 
 // Function for printing coordinates read from the .txt file
 void printCoords(vector<pair<float, float>>& coords, int n);
+
+// Function to perform linear regression 
+void LinearRegression(const vector<pair<float, float>>& coords, float& m, float& c);

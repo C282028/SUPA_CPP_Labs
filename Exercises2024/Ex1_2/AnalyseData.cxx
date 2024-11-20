@@ -1,6 +1,7 @@
 //Cameron Cassells
 //13/11/2024
 
+
 #include <iostream>
 #include <iomanip>
 #include "CustomFunctions.hh"
@@ -27,7 +28,8 @@ int main()
         cout << "\nPlease select an option:" << endl;
         cout << "1. Print coordinates" << endl;
         cout << "2. Calculate magnitudes" << endl;
-        cout << "3. Exit program" << endl;
+        cout << "3. Perform linear regression" << endl;
+        cout << "4. Exit program" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
 
@@ -58,8 +60,15 @@ int main()
                 break;
             }
 
-            // 3. Exit program
             case 3:
+            {
+                float m, c;
+                LinearRegression(coords, m, c);
+                break;
+            }
+
+            // 4. Exit program
+            case 4:
             {
                 cout << "Exiting program." << endl;
                 exitProgram = true;

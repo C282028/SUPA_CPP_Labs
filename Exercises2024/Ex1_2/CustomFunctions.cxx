@@ -1,4 +1,9 @@
+//Cameron Cassells
+//20/11/2024
+
+
 #include <iostream>
+#include <sstream>
 #include "CustomFunctions.hh"
 
 using namespace std;
@@ -70,3 +75,52 @@ void printCoords(vector<pair<float, float>>& coords, int n)
 	cout << lines_to_print << " lines printed from file" << endl;
     cout << coords.size() << " lines read from file" << endl;
 } //printCoords
+
+// Function to perform linear regression
+void LinearRegression(const vector<pair<float, float>>& coords, float& m, float& c)
+{
+    // Linear reggression variables 
+    size_t n = coords.size();
+    float sum_x = 0;
+    float sum_y = 0;
+    float sum_xy = 0;
+    float sum_x2 = 0;
+
+    // iterates through each vector pair 
+    for (const auto& coord : coords)
+    {
+        float x = coord.first;
+        float y = coord.second;
+        sum_x += x;
+        sum_y += y;
+        sum_xy += x * y;
+        sum_x2 += x * x;
+    }
+
+    float denominator = n * sum_x2 - sum_x * sum_x;
+    
+    m = (n * sum_xy - sum_x * sum_y) / denominator;
+    c = (sum_y - m * sum_x) / n;
+
+    ostringstream equationStream;
+    equationStream << "y = " << m << "x + " << c;
+    string equation = equationStream.str();
+    cout << "Linear Regression Equation: " << equation << endl;
+
+
+    string filename = "Outputs/Linear_Regreasion_ Equations.txt";
+    ofstream outStream;
+    outStream.open(filename);
+
+    if (!outStream.is_open())
+    {
+        cout << "Error opeining file: " << filename << endl;
+    }
+    else
+    {
+        outStream << equation << endl;
+        cout << "Output file: " << filename << " opened successfully!" << endl;
+    }
+    outStream.close();
+
+}
