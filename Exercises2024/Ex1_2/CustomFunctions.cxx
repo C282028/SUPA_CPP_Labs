@@ -10,6 +10,8 @@
 
 using namespace std;
 
+//000000oooooo............oooooo000000000000oooooo............oooooo000000000000oooooo............oooooo000000//
+
 // Function to read coordinates from a file defined in AnalysData.cxx
 vector <pair<float,float>> readCoords(string& filename)
 {
@@ -44,6 +46,7 @@ vector <pair<float,float>> readCoords(string& filename)
     return coords;
 } //readCoords
 
+//000000oooooo............oooooo000000000000oooooo............oooooo000000000000oooooo............oooooo000000//
 
 // Function to evaluate the magnitude of each vector
 float Magnitude(const pair<float, float>& coord)
@@ -51,6 +54,7 @@ float Magnitude(const pair<float, float>& coord)
 	return sqrt(coord.first * coord.first + coord.second * coord.second);
 } //Magnitude
 
+//000000oooooo............oooooo000000000000oooooo............oooooo000000000000oooooo............oooooo000000//
 
 // Overloaded print function for coordinates
 void print(const vector<pair<float, float>>& coords, int n)
@@ -68,6 +72,7 @@ void print(const vector<pair<float, float>>& coords, int n)
 	cout << n << " coordinates printed." << endl;
 } //printCoords
 
+//000000oooooo............oooooo000000000000oooooo............oooooo000000000000oooooo............oooooo000000//
 
 // Overloaded print function for magnitudes
 void print(const vector<float>& magnitudes)
@@ -79,6 +84,7 @@ void print(const vector<float>& magnitudes)
 	cout << magnitudes.size() << " magnitudes printed." << endl;
 }
 
+//000000oooooo............oooooo000000000000oooooo............oooooo000000000000oooooo............oooooo000000//
 
 // Function to read error values 
 vector<float> readErrors(const string& errorPairs)
@@ -112,10 +118,10 @@ vector<float> readErrors(const string& errorPairs)
 	return errors;
 }
 
-
+//000000oooooo............oooooo000000000000oooooo............oooooo000000000000oooooo............oooooo000000//
 
 // Function to perform Least squares method
-void LinearRegression(const vector<pair<float, float>>& coords, const vector<float>& errors, float& m, float& c)
+void LinearRegression(const vector<pair<float, float>>& coords, const vector<float>& errors, float& m, float& c, float& chi2_per_ndf)
 {
     // Linear reggression variables 
     size_t n = coords.size();
@@ -150,7 +156,7 @@ void LinearRegression(const vector<pair<float, float>>& coords, const vector<flo
 
 	// Degrees of freedom: NDF = n - p (p = 2 for slope and intercept)
 	int ndf = n - 2;
-	float chi2_per_ndf = chi2 / ndf;
+	chi2_per_ndf = chi2 / ndf;
 
 
 	// Output results to console
@@ -159,21 +165,85 @@ void LinearRegression(const vector<pair<float, float>>& coords, const vector<flo
 	string equation = equationStream.str();
 	cout << "Linear Regression Equation: " << equation << endl;
 	cout << "Chi-squared / NDF: " << chi2_per_ndf << endl;
-
-	// Write the equation to a file
-	string filename = "Outputs/Linear_Regression_Equations.txt";
-	ofstream outStream(filename);
-
-	if (!outStream.is_open())
-	{
-		cout << "Error: Unable to create or write to the file '" << filename << endl;
-	}
-	else
-	{
-		outStream << equation << endl;
-		outStream << chi2_per_ndf << endl;
-		cout << "Output file: " << filename << " opened successfully!" << endl;
-	}
-
-	outStream.close();
 }
+
+//000000oooooo............oooooo000000000000oooooo............oooooo000000000000oooooo............oooooo000000//
+
+// Function to calculate x^y for each data point with y rounded to the nearest whole number
+float calculateXY(float x, float y)
+{
+	// Round y to the nearest whole number
+	int exponent = static_cast<int>(round(y));
+
+	// Calculate x^y for positive exponents
+	float result = 1;
+	for (int i = 0; i < exponent; ++i)
+		result *= x;
+
+	return result;
+}
+
+//000000oooooo............oooooo000000000000oooooo............oooooo000000000000oooooo............oooooo000000//
+
+// Overloaded Function to save magnitudes to a file
+void saveToFile(const vector<float>& data, const string& filename)
+{
+    ofstream outFile("Outputs/" + filename);
+
+    if (!outFile.is_open())
+    {
+        cout << "Error: Unable to create or write to the file '" << filename << "'." << endl;
+        return;
+    }
+
+    for (const auto& value : data)
+        outFile << fixed << setprecision(3) << value << endl;
+
+    outFile.close();
+    cout << "Magnitudes successfully saved to 'Outputs/" << filename << "'." << endl;
+}
+
+//000000oooooo............oooooo000000000000oooooo............oooooo000000000000oooooo............oooooo000000//
+
+// Overloaded Function to save equations and Chi-squared/NDF to a file
+void saveToFile(const string& equation, float chi2_per_ndf, const string& filename)
+{
+    ofstream outFile("Outputs/" + filename);
+
+    if (!outFile.is_open())
+    {
+        cout << "Error: Unable to create or write to the file '" << filename << "'." << endl;
+        return;
+    }
+
+    outFile << equation << endl;
+    outFile << "Chi-squared / NDF: " << fixed << setprecision(3) << chi2_per_ndf << endl;
+
+    outFile.close();
+    cout << "Regression results successfully saved to 'Outputs/" << filename << "'." << endl;
+}
+
+//000000oooooo............oooooo000000000000oooooo............oooooo000000000000oooooo............oooooo000000//
+
+// Overloaded Function to save x^y calculations to a file
+void saveToFile(const vector<pair<float, float>>& data, const string& filename)
+{
+    ofstream outFile("Outputs/" + filename);
+
+    if (!outFile.is_open())
+    {
+        cout << "Error: Unable to create or write to the file '" << filename << "'." << endl;
+        return;
+    }
+
+    for (const auto& entry : data)
+    {
+        outFile << "(" << fixed << setprecision(3) << entry.first
+                << ", " << fixed << setprecision(3) << entry.second << ")" << endl;
+    }
+
+    outFile.close();
+    cout << "Coordinates or Results successfully saved to 'Outputs/" << filename << "'." << endl;
+}
+
+//000000oooooo............oooooo000000000000oooooo............oooooo000000000000oooooo............oooooo000000//

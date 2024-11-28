@@ -31,7 +31,8 @@ int main()
         cout << "1. Print coordinates" << endl;
         cout << "2. Calculate magnitudes" << endl;
         cout << "3. Perform linear regression" << endl;
-        cout << "4. Exit program" << endl;
+        cout << "4. Calculate x^y for each data point (y rounded to nearest whole number)" << endl;
+        cout << "5. Exit program" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
 
@@ -48,40 +49,74 @@ int main()
                 print(coords, n);
 
                 break;
-            }
+            } //1
 
             // 2. Calculate magnitudes
-		    case 2:
-		    {
-			    vector<float> magnitudes;
-			    for (const auto& coord : coords)
-				    magnitudes.push_back(Magnitude(coord));
+            case 2: 
+            {
+                vector<float> magnitudes;
+                for (const auto& coord : coords)
+                magnitudes.push_back(Magnitude(coord));
 
-			        print(magnitudes);
-			        break;
-            }
+                print(magnitudes);
+
+                // Save magnitudes to a file
+                saveToFile(magnitudes, "Magnitudes.txt");
+
+                break;
+            }//2
 
             //3. Least squares method
             case 3:
             {
-                float m, c;
-                LinearRegression(coords, errors, m, c);
-                break;
-            }
+                float m, c, chi2_per_ndf;
+                LinearRegression(coords, errors, m, c, chi2_per_ndf);
 
-            // 4. Exit program
+                // Generate equation string
+                ostringstream equationStream;
+                equationStream << "y = " << m << "x + " << c;
+                string equation = equationStream.str();
+
+                // Save linear regression results to a file
+                saveToFile(equation, chi2_per_ndf, "Linear_Regression.txt");
+
+                break;
+            }//3
+
+            // 4. Calculate x^y for each data point
             case 4:
+            {
+                vector<pair<float, float>> xyResults;
+                for (const auto& coord : coords)
+                {
+                    float x = coord.first;
+                    float y = coord.second;
+                    float result = calculateXY(x, y);
+                    xyResults.emplace_back(x, result);
+                }
+
+                // Print and save x^y results
+                for (const auto& result : xyResults)
+                    cout << "x = " << result.first << ", x^y = " << result.second << endl;
+
+                saveToFile(xyResults, "XY_Calculations.txt");
+
+                break;
+            }//4
+
+            // 5. Exit program
+            case 5:
             {
                 cout << "Exiting program." << endl;
                 exitProgram = true;
                 break;
-            }
+            }//5
 
             default:
             {
                 cout << "Invalid choice. Please select a valid option." << endl;
                 break;
-            }
+            }//default
         }
     }
 
