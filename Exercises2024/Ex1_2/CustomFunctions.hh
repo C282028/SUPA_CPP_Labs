@@ -4,10 +4,9 @@
 
 #pragma once 
 #include <fstream>
-#include <cstdlib>
 #include <vector>
 #include <utility>
-#include <cmath>
+#include <string>
 
 using namespace std;
 
@@ -17,8 +16,12 @@ vector <pair<float,float>> readCoords(string& filename);
 // Function to evaluate the magnitude of each vector
 float Magnitude(const pair<float, float>& coord);
 
-// Function for printing coordinates read from the .txt file
-void printCoords(vector<pair<float, float>>& coords, int n);
+// Overloaded printing functions
+void print(const vector<pair<float, float>>& coords, int n);
+void print(const vector<float> &magnitudes);
 
-// Function to perform linear regression 
-void LinearRegression(const vector<pair<float, float>>& coords, float& m, float& c);
+// Function to read coordinate errors from a.txt file
+vector<float> readErrors(const string& filename);
+
+// Function to perform linear regression with chi-squared fit
+void LinearRegression(const vector<pair<float, float>>& coords, const vector<float>& errors, float& m, float& c);

@@ -11,11 +11,13 @@ using namespace std;
 
 int main()
 {
-    // Specifys the file to be read
+    // Specifys the files to be read
     string filepath = "/workspaces/SUPA_CPP_Labs/Exercises2024/Ex1_2/input2D_float.txt";
+    string errorsFile = "/workspaces/SUPA_CPP_Labs/Exercises2024/Ex1_2/error2D_float.txt";
 
     // Calls the reading function
     vector<pair<float, float>> coords = readCoords(filepath);
+    vector<float> errors = readErrors(errorsFile);
 
     // Variable to control the menu loop
     bool exitProgram = false;
@@ -43,27 +45,27 @@ int main()
                 cin >> n;
 
                 // Calls the printing function
-                printCoords(coords, n);
+                print(coords, n);
 
                 break;
             }
 
             // 2. Calculate magnitudes
-            case 2:
-            {
-                cout << "\nMagnitude of coordinates:" << endl;
-                for (size_t i = 0; i < coords.size(); ++i)
-                {
-                    float magnitude = Magnitude(coords[i]);
-                    cout << "Coordinate " << i + 1 << ": " << fixed << setprecision(2) << magnitude << endl;
-                }
-                break;
+		    case 2:
+		    {
+			    vector<float> magnitudes;
+			    for (const auto& coord : coords)
+				    magnitudes.push_back(Magnitude(coord));
+
+			        print(magnitudes);
+			        break;
             }
 
+            //3. Least squares method
             case 3:
             {
                 float m, c;
-                LinearRegression(coords, m, c);
+                LinearRegression(coords, errors, m, c);
                 break;
             }
 
